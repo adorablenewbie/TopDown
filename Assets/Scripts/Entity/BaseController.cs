@@ -3,6 +3,7 @@ using UnityEngine;
 public class BaseController : MonoBehaviour
 {
     protected Rigidbody2D _rigidbody;
+    protected AnimationHandler animationHandler;
 
     [SerializeField] private SpriteRenderer characterRenderer;
     [SerializeField] private Transform weaponPivot;
@@ -19,6 +20,7 @@ public class BaseController : MonoBehaviour
     protected virtual void Awake()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        animationHandler = GetComponent<AnimationHandler>();
     }
 
     protected virtual void Start()
@@ -34,7 +36,7 @@ public class BaseController : MonoBehaviour
 
     protected virtual void FixedUpdate()
     {
-        Movment(movementDirection);
+        Movement(movementDirection);
         if (knockbackDuration > 0.0f)
         {
             knockbackDuration -= Time.fixedDeltaTime;
@@ -46,7 +48,7 @@ public class BaseController : MonoBehaviour
 
     }
 
-    private void Movment(Vector2 direction)
+    private void Movement(Vector2 direction)
     {
         direction = direction * 5;
         if (knockbackDuration > 0.0f)
@@ -56,6 +58,7 @@ public class BaseController : MonoBehaviour
         }
 
         _rigidbody.velocity = direction;
+        animationHandler.Move(direction);
     }
 
     private void Rotate(Vector2 direction)
