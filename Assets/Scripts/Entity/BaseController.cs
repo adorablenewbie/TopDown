@@ -3,7 +3,6 @@ using UnityEngine;
 public class BaseController : MonoBehaviour
 {
     protected Rigidbody2D _rigidbody;
-    protected AnimationHandler animationHandler;
 
     [SerializeField] private SpriteRenderer characterRenderer;
     [SerializeField] private Transform weaponPivot;
@@ -16,6 +15,8 @@ public class BaseController : MonoBehaviour
 
     private Vector2 knockback = Vector2.zero;
     private float knockbackDuration = 0.0f;
+
+    protected AnimationHandler animationHandler;
 
     protected StatHandler statHandler;
 
@@ -118,5 +119,24 @@ public class BaseController : MonoBehaviour
     {
         if (lookDirection != Vector2.zero)
             weaponHandler?.Attack();
+    }
+
+    public virtual void Death()
+    {
+        _rigidbody.velocity = Vector3.zero;
+
+        foreach (SpriteRenderer renderer in transform.GetComponentsInChildren<SpriteRenderer>())
+        {
+            Color color = renderer.color;
+            color.a = 0.3f;
+            renderer.color = color;
+        }
+
+        foreach (Behaviour component in transform.GetComponentsInChildren<Behaviour>())
+        {
+            component.enabled = false;
+        }
+
+        Destroy(gameObject, 2f);
     }
 }
