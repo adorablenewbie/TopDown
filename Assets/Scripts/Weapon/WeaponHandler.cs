@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class WeaponHandler : MonoBehaviour
 {
@@ -17,6 +18,8 @@ public class WeaponHandler : MonoBehaviour
 
     [SerializeField] private float attackRange = 10f;
     public float AttackRange { get => attackRange; set => attackRange = value; }
+
+    public AudioClip attackSoundClip;
 
     public LayerMask target;
 
@@ -37,6 +40,7 @@ public class WeaponHandler : MonoBehaviour
     private Animator animator;
     private SpriteRenderer weaponRenderer;
 
+
     protected virtual void Awake()
     {
         Controller = GetComponentInParent<BaseController>();
@@ -55,6 +59,9 @@ public class WeaponHandler : MonoBehaviour
     public virtual void Attack()
     {
         AttackAnimation();
+
+        if (attackSoundClip)
+            SoundManager.PlayClip(attackSoundClip);
     }
 
     public void AttackAnimation()
