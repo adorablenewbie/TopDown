@@ -5043,6 +5043,7 @@ MonoBehaviour:
   enemyPrefabs:
   - {fileID: 9200331437841264808, guid: 91d93e53f36c39644badca72ee3988d2, type: 3}
   - {fileID: 3565266880610770288, guid: 661d2fa279d8aab4a805281aafdc5ffa, type: 3}
+  - {fileID: 9200331437841264808, guid: 49e5aad3bbfc85e47a76806b5a736da5, type: 3}
   spawnAreas:
   - serializedVersion: 2
     x: -7.5
@@ -12744,6 +12745,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c0a68be406663845aed7280e100e9ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  healthChangeDelay: 0.5
 --- !u!114 &905383187
 MonoBehaviour:
   m_ObjectHideFlags: 0
