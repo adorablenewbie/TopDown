@@ -16,6 +16,8 @@ public class GameManager : MonoBehaviour
 
     private CameraShake cameraShake;
 
+    private StageInstance currentStageInstance;
+
     private void Awake()
     {
         instance = this;
@@ -49,8 +51,9 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         uiManager.SetPlayGame();
-        //StartNextWave();
-        StartStage();
+        // StartNextWave();
+        // StartStage();
+        LoadOrStartNewStage();
     }
 
     void StartNextWave()
@@ -70,6 +73,7 @@ public class GameManager : MonoBehaviour
     {
         enemyManager.StopWave();
         uiManager.SetGameOver();
+        StageSaveManager.ClearSavedStage();
     }
 
     public void MainCameraShake()
@@ -77,28 +81,34 @@ public class GameManager : MonoBehaviour
         cameraShake.ShakeCamera(1, 1, 1);
     }
 
-    public void StartStage()
+    public void StartStage(StageInstance stageInstance)
     {
-        StageInfo stageInfo = GetStageInfo(currentStageIndex);
+        currentStageIndex = stageInstance.stageKey;
+        currentWaveIndex = stageInstance.currentWave;
+
+        StageInfo stageInfo = GetStageInfo(stageInstance.stageKey);
 
         if (stageInfo == null)
         {
             Debug.Log("스테이지 정보가 없습니다.");
+            StageSaveManager.ClearSavedStage();
+            currentStageInstance = null;
             return;
         }
 
-        uiManager.ChangeWave(currentStageIndex + 1);
+        stageInstance.SetStageInfo(stageInfo);
 
-        enemyManager.StartStage(stageInfo.waves[currentWaveIndex]);
+        uiManager.ChangeWave(currentStageIndex + 1);
+        enemyManager.StartStage(currentStageInstance);
+        StageSaveManager.SaveStageInstance(currentStageInstance);
     }
 
     public void StartNextWaveInStage()
     {
-        StageInfo stageInfo = GetStageInfo(currentStageIndex);
-        if (stageInfo.waves.Length - 1 > currentWaveIndex)
+        if (currentStageInstance.CheckEndOfWave())
         {
-            currentWaveIndex++;
-            StartStage();
+            currentStageInstance.currentWave++;
+            StartStage(currentStageInstance);
         }
         else
         {
@@ -108,9 +118,15 @@ public class GameManager : MonoBehaviour
 
     public void CompleteStage()
     {
-        currentStageIndex++;
-        currentWaveIndex = 0;
-        StartStage();
+        StageSaveManager.ClearSavedStage();
+
+        if (currentStageInstance == null)
+            return;
+
+        currentStageInstance.stageKey += 1;
+        currentStageInstance.currentWave = 0;
+
+        StartStage(currentStageInstance);
     }
 
     private StageInfo GetStageInfo(int stageKey)
@@ -120,5 +136,21 @@ public class GameManager : MonoBehaviour
             if (stage.stageKey == stageKey) return stage;
         }
         return null;
+    }
+
+    private void LoadOrStartNewStage()
+    {
+        StageInstance savedInstance = StageSaveManager.LoadStageInstance();
+
+        if (savedInstance != null)
+        {
+            currentStageInstance = savedInstance;
+        }
+        else
+        {
+            currentStageInstance = new StageInstance(0, 0);
+        }
+
+        StartStage(currentStageInstance);
     }
 }
