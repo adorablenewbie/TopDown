@@ -24,11 +24,19 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private float timeBetweenSpawns = 0.2f;
     [SerializeField] private float timeBetweenWaves = 1f;
 
+    private Dictionary<string, GameObject> enemyPrefabDic;
+
     GameManager gameManager;
 
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
+
+        enemyPrefabDic = new Dictionary<string, GameObject>();
+        foreach (GameObject prefab in enemyPrefabs)
+        {
+            enemyPrefabDic[prefab.name] = prefab;
+        }
     }
 
     public void StartWave(int waveCount)
@@ -62,7 +70,7 @@ public class EnemyManager : MonoBehaviour
         enemySpawnComplite = true;
     }
 
-    private void SpawnRandomEnemy()
+    private void SpawnRandomEnemy(string prefabName = null)
     {
         if (enemyPrefabs.Count == 0 || spawnAreas.Count == 0)
         {
@@ -70,21 +78,25 @@ public class EnemyManager : MonoBehaviour
             return;
         }
 
-        // 랜덤한 적 프리팹 선택
-        GameObject randomPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+        GameObject randomPrefab;
+        if (prefabName == null)
+        {
+            randomPrefab = enemyPrefabs[Random.Range(0, enemyPrefabs.Count)];
+        }
+        else
+        {
+            randomPrefab = enemyPrefabDic[prefabName];
+        }
 
-        // 랜덤한 영역 선택
+
         Rect randomArea = spawnAreas[Random.Range(0, spawnAreas.Count)];
 
-        // Rect 영역 내부의 랜덤 위치 계산
         Vector2 randomPosition = new Vector2(
             Random.Range(randomArea.xMin, randomArea.xMax),
-            Random.Range(randomArea.yMin, randomArea.yMax)
-        );
+            Random.Range(randomArea.yMin, randomArea.yMax));
 
-        // 적 생성 및 리스트에 추가
-        GameObject spawnedEnemy = Instantiate(randomPrefab, new Vector3(randomPosition.x, randomPosition.y), Quaternion.identity);
-        EnemyController enemyController = spawnedEnemy.GetComponent<EnemyController>();
+        GameObject spawnEnemy = Instantiate(randomPrefab, new Vector3(randomPosition.x, randomPosition.y), Quaternion.identity);
+        EnemyController enemyController = spawnEnemy.GetComponent<EnemyController>();
         enemyController.Init(this, gameManager.player.transform);
 
         activeEnemies.Add(enemyController);
@@ -110,4 +122,40 @@ public class EnemyManager : MonoBehaviour
         if (enemySpawnComplite && activeEnemies.Count == 0)
             gameManager.EndOfWave();
     }
+
+    public void StartStage(WaveData waveData)
+    {
+        if (waveRoutine != null)
+            StopCoroutine(waveRoutine);
+
+        waveRoutine = StartCoroutine(SpawnStart(waveData));
+    }
+
+    private IEnumerator SpawnStart(WaveData waveData)
+    {
+        enemySpawnComplite = false;
+        yield return new WaitForSeconds(timeBetweenWaves);
+
+        for (int i = 0; i < waveData.monsters.Length; i++)
+        {
+            yield return new WaitForSeconds(timeBetweenSpawns);
+
+            MonsterSpawnData monsterSpawnData = waveData.monsters[i];
+            for (int j = 0; j < monsterSpawnData.spawnCount; j++)
+            {
+                SpawnRandomEnemy(monsterSpawnData.monsterType);
+            }
+        }
+
+        if (waveData.hasBoss)
+        {
+            yield return new WaitForSeconds(timeBetweenSpawns);
+
+            gameManager.MainCameraShake();
+            SpawnRandomEnemy(waveData.bossType);
+        }
+
+        enemySpawnComplite = true;
+    }
+
 }

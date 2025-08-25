@@ -5511,6 +5511,16 @@ MonoBehaviour:
     y: -4.5
     width: 4
     height: 8
+  - serializedVersion: 2
+    x: 18
+    y: -4.5
+    width: 2
+    height: 8
+  - serializedVersion: 2
+    x: -5
+    y: -18
+    width: 10
+    height: 2
   gizmoColor: {r: 1, g: 0, b: 0, a: 0.3}
   timeBetweenSpawns: 0.2
   timeBetweenWaves: 1
@@ -17960,6 +17970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentWaveIndex: 0
+  currentStageIndex: 0
 --- !u!1 &905383180
 GameObject:
   m_ObjectHideFlags: 0
@@ -18985,6 +18996,7 @@ GameObject:
   - component: {fileID: 1428042585}
   - component: {fileID: 1428042586}
   - component: {fileID: 1428042587}
+  - component: {fileID: 1428042588}
   m_Layer: 0
   m_Name: FollowVirtualCamera
   m_TagString: Untagged
@@ -19062,6 +19074,18 @@ MonoBehaviour:
   m_BoundingShape2D: {fileID: 922065442}
   m_Damping: 0.5
   m_MaxWindowSize: -1
+--- !u!114 &1428042588
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1428042584}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b7120a50c8310d459e7ddea0d48b2fe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1449964379
 GameObject:
   m_ObjectHideFlags: 0
