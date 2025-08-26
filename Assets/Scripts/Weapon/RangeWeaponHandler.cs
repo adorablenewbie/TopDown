@@ -22,32 +22,35 @@ public class RangeWeaponHandler : WeaponHandler
     [SerializeField] private int numberofProjectilesPerShot;
     public int NumberofProjectilesPerShot { get { return numberofProjectilesPerShot; } }
 
-    [SerializeField] private float multipleProjectilesAngel;
-    public float MultipleProjectilesAngel { get { return multipleProjectilesAngel; } }
-
+    [SerializeField] private float multipleProjectilesAngle;
+    public float MultipleProjectilesAngel { get { return multipleProjectilesAngle; } }
+    
     [SerializeField] private Color projectileColor;
     public Color ProjectileColor { get { return projectileColor; } }
 
     private ProjectileManager projectileManager;
+
+    private StatHandler statHandler;
+
     protected override void Start()
     {
         base.Start();
         projectileManager = ProjectileManager.Instance;
+        statHandler = GetComponentInParent<StatHandler>();
     }
 
     public override void Attack()
     {
         base.Attack();
 
-        float projectilesAngleSpace = multipleProjectilesAngel;
-        int numberOfProjectilesPerShot = numberofProjectilesPerShot;
+        float projectileAngleSpace = multipleProjectilesAngle;
+        int numberOfProjectilePerShot = numberofProjectilesPerShot + (int)statHandler.GetStat(StatType.ProjectileCount); ;
 
-        float minAngle = -(numberOfProjectilesPerShot / 2f) * projectilesAngleSpace + 0.5f * multipleProjectilesAngel;
+        float minAlge = -(numberOfProjectilePerShot / 2f) * projectileAngleSpace;
 
-
-        for (int i = 0; i < numberOfProjectilesPerShot; i++)
+        for (int i = 0; i < numberOfProjectilePerShot; i++)
         {
-            float angle = minAngle + projectilesAngleSpace * i;
+            float angle = minAlge + projectileAngleSpace * i;
             float randomSpread = Random.Range(-spread, spread);
             angle += randomSpread;
             CreateProjectile(Controller.LookDirection, angle);

@@ -16,6 +16,7 @@ public class ProjectileManager : MonoBehaviour
         instance = this;
     }
 
+
     private void Start()
     {
         objectPoolManager = ObjectPoolManager.Instance;
