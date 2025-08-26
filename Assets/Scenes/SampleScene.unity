@@ -18842,6 +18842,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1328845664}
   - component: {fileID: 1328845663}
+  - component: {fileID: 1328845665}
   m_Layer: 0
   m_Name: ProjectileManager
   m_TagString: Untagged
@@ -18881,6 +18882,21 @@ Transform:
   - {fileID: 23964381}
   m_Father: {fileID: 862675709}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1328845665
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1328845662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3a2965c329617947a18a1d24305f66b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabs:
+  - {fileID: 8792491083375620667, guid: a8d6c5a517aed2b4f9cd97ce8fa030eb, type: 3}
+  - {fileID: 4150570747424657628, guid: 61e8ace094eb73f4db2f1f2b7e3fd0e7, type: 3}
 --- !u!1 &1340935702
 GameObject:
   m_ObjectHideFlags: 0

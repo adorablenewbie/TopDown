@@ -1,6 +1,7 @@
+using System;
 using UnityEngine;
 
-public class ProjectileController : MonoBehaviour
+public class ProjectileController : MonoBehaviour, IPoolable
 {
     [SerializeField] private LayerMask levelCollisionLayer;
 
@@ -17,6 +18,8 @@ public class ProjectileController : MonoBehaviour
     public bool fxOnDestory = true;
 
     private ProjectileManager projectileManager;
+
+    private Action<GameObject> returnToPool;
 
     private void Awake()
     {
@@ -97,6 +100,22 @@ public class ProjectileController : MonoBehaviour
             projectileManager.CreateImpactParticlesAtPosition(position, rangeWeaponHandler);
         }
 
-        Destroy(this.gameObject);
+        // Destroy(this.gameObject);
+        OnDespawn();
+    }
+
+    public void Initialize(Action<GameObject> returnAction)
+    {
+        returnToPool = returnAction;
+    }
+
+    public void OnSpawn()
+    {
+
+    }
+
+    public void OnDespawn()
+    {
+        returnToPool?.Invoke(gameObject);
     }
 }
