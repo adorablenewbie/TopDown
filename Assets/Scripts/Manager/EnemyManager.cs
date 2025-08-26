@@ -28,6 +28,8 @@ public class EnemyManager : MonoBehaviour
 
     GameManager gameManager;
 
+    [SerializeField] private List<GameObject> itemPrefabs;
+
     public void Init(GameManager gameManager)
     {
         this.gameManager = gameManager;
@@ -119,6 +121,9 @@ public class EnemyManager : MonoBehaviour
     public void RemoveEnemyOnDeath(EnemyController enemy)
     {
         activeEnemies.Remove(enemy);
+
+        CreateRandomItem(enemy.transform.position);
+
         if (enemySpawnComplite && activeEnemies.Count == 0)
             gameManager.EndOfWave();
     }
@@ -160,4 +165,8 @@ public class EnemyManager : MonoBehaviour
         enemySpawnComplite = true;
     }
 
+    public void CreateRandomItem(Vector3 position)
+    {
+        GameObject item = Instantiate(itemPrefabs[Random.Range(0, itemPrefabs.Count)], position, Quaternion.identity);
+    }
 }
